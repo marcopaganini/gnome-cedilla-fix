@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# fix-cedilla
+#
+# This is a very simple program to configure your personal ".XCompose" file and
+# your environment so that typing 'c will generate a cedilla c instead of an
+# accented c.
+#
+# For further information, visit: http://github.com/marcopaganini/gnome-cedilla-fix
+#
+# (C) Marco Paganini <paganini@paganini.net>
+
+LANG=${LANG:=en_US.UTF-8}
+SYSTEM_COMPOSE="/usr/share/X11/locale/$LANG/Compose"
+USER_COMPOSE="$HOME/.XCompose"
+ENVFILE="/etc/environment"
+
+PROGNAME=${0##*/}
+
+# Check for root
+if [ ! "$(id -u)" = "0" ]; then
+  echo >&2 "This program needs root access. Please run with \"sudo $PROGNAME\""
+  exit 1
+fi
+
+if [ ! -s "$SYSTEM_COMPOSE" ]; then
+  echo >&2 "ERROR: Unable to find system Compose file: $SYSTEM_COMPOSE"
+  exit 1
+fi
+
+if [ -s "$USER_COMPOSE" ]; then
+  echo >&2 "WARNING: A file named $USER_COMPOSE already exists. Renaming original to ${USER_COMPOSE}.ORIGINAL"
+fi
+
+# Configure system for xim input method.
+[ -s "$ENVFILE" ] && source "$ENVFILE"
+
+# Make sure we're not overwriting a setting already in place
+if [ -n "$GTK_IM_MODULE" ]; then
+  if [ "$GTK_IM_MODULE" != "xim" ]; then
+    echo >&2 "ERROR: $ENVFILE sets GTK_IM_MODULE to $GTK_IM_MODULE. Please edit the file and fix this."
+    exit 1
+  fi
+else
+  echo "GTK_IM_MODULE=xim" >>/etc/environment
+fi
+
+if [ -n "$QT_IM_MODULE" ]; then
+  if [ "$QT_IM_MODULE" != "xim" ]; then
+    echo >&2 "ERROR: $ENVFILE sets QT_IM_MODULE to $QT_IM_MODULE. Please edit the file and fix this."
+    exit 1
+  fi
+else
+  echo "QT_IM_MODULE=xim" >>/etc/environment
+fi
+
+# Save a copy of the system Compose file into .XCompose, replacing
+# all ocurrences of accented-c by cedilla-c
+
+sed -e 's/\xc4\x87/\xc3\xa7/g' \
+    -e 's/\xc4\x86/\xc3\x87/g' <"$SYSTEM_COMPOSE" >"$USER_COMPOSE"
+
+cat <<EOM
+Operation complete.
+
+Please reboot your system (or restart your X server) to activate the changes.
+
+To revert the system to the previous state, remove the file $USER_COMPOSE and
+edit $ENVFILE, removing all lines with GTK_IM_MODULE and QT_IM_MODULE.
+
+If things don't work after a reboot, make sure your "Input Method" is configured
+to "auto" in the Gnome Settings.
+EOM
