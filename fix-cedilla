@@ -29,7 +29,9 @@ if [ ! -s "$SYSTEM_COMPOSE" ]; then
 fi
 
 if [ -s "$USER_COMPOSE" ]; then
-  echo >&2 "WARNING: A file named $USER_COMPOSE already exists. Renaming original to ${USER_COMPOSE}.ORIGINAL"
+  echo >&2 "WARNING: A file named $USER_COMPOSE already exists. Saving original to ${USER_COMPOSE}.ORIGINAL"
+  rm -f "${USER_COMPOSE}.ORIGINAL"
+  cp -f "${USER_COMPOSE}" "${USER_COMPOSE}.ORIGINAL"
 fi
 
 # Configure system for xim input method.
