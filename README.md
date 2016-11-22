@@ -17,7 +17,7 @@ At the shell prompt, type:
 ```bash
 $ wget -q https://raw.githubusercontent.com/marcopaganini/gnome-cedilla-fix/master/fix-cedilla -O fix-cedilla
 $ chmod 755 fix-cedilla
-$ sudo ./fix-cedilla
+$ ./fix-cedilla
 ```
 
 If everything works OK, the program will issue a message indicating the operation was completed and some tips on how to revert the installation, if needed.
@@ -26,7 +26,7 @@ Make sure to reboot your computer (technically, only a X restart is required) to
 
 ## How does it work?
 
-The program copies your system "Compose" file into `~/.XCompose` (your personal compose file), translating every occurrence of an accented-c (ć) into a cedilla c (ç). It then configures your environment (in `/etc/environment`) to use the "xim" module for GTK and QT.
+The program copies your system "Compose" file into `~/.XCompose` (your personal compose file), translating every occurrence of an accented-c (ć) into a cedilla c (ç).
 
 ## Compatibility
 
