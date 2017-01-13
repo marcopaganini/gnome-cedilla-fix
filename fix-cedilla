@@ -79,7 +79,6 @@ cat <<EOM
 System changed.
 
 Please reboot your system (or restart your X server) to activate the changes.
-
 To revert the system to the previous state:
 
 * Remove the file $USER_COMPOSE
@@ -89,5 +88,4 @@ If things don't work after a reboot, make sure your Input Method
 is configured to "Auto" in the Gnome Settings.
 
 Operation complete.
-
 EOM
