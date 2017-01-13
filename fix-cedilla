@@ -6,70 +6,88 @@
 # your environment so that typing 'c will generate a cedilla c instead of an
 # accented c.
 #
-# For further information, visit: http://github.com/marcopaganini/gnome-cedilla-fix
+# For further information, visit:
+# http://github.com/marcopaganini/gnome-cedilla-fix
 #
 # (C) Marco Paganini <paganini@paganini.net>
 
 LANG=${LANG:=en_US.UTF-8}
-SYSTEM_COMPOSE="/usr/share/X11/locale/$LANG/Compose"
+COMPOSE_DIR="/usr/share/X11/locale"
 USER_COMPOSE="$HOME/.XCompose"
 ENVFILE="/etc/environment"
+INPUT_METHOD="cedilla"
 
 PROGNAME=${0##*/}
 
-# Check for root
-if [ ! "$(id -u)" = "0" ]; then
-  echo >&2 "This program needs root access. Please run with \"sudo $PROGNAME\""
+# Find compose file for the current language.
+system_compose=$COMPOSE_DIR/$(sed -ne "s/^\([^:]*\):[ \t]*$LANG/\1/p" <$COMPOSE_DIR/compose.dir | head -1)
+if [ -z "$system_compose" ]; then
+  echo >&2 "ERROR: Unable to find a system compose file for your system language ($LANG)"
   exit 1
 fi
 
-if [ ! -s "$SYSTEM_COMPOSE" ]; then
-  echo >&2 "ERROR: Unable to find system Compose file: $SYSTEM_COMPOSE"
+if [ ! -s "$system_compose" ]; then
+  echo >&2 "ERROR: Unable to open system Compose file: $system_compose"
   exit 1
 fi
 
 if [ -s "$USER_COMPOSE" ]; then
-  echo >&2 "WARNING: A file named $USER_COMPOSE already exists. Saving original to ${USER_COMPOSE}.ORIGINAL"
+  echo >&2 "*** WARNING: ***"
+  echo >&2 "A file named $USER_COMPOSE already exists."
+  echo >&2 "Saving original to ${USER_COMPOSE}.ORIGINAL"
   rm -f "${USER_COMPOSE}.ORIGINAL"
   cp -f "${USER_COMPOSE}" "${USER_COMPOSE}.ORIGINAL"
 fi
 
-# Configure system for xim input method.
+# Configure system for our input method.
+unset GTK_IM_MODULE
 [ -s "$ENVFILE" ] && source "$ENVFILE"
+
+# sudo warning
+cat <<EOM
+
+This program uses "sudo" to make changes to $ENVFILE.
+You may be prompted to enter your password next.
+
+EOM
 
 # Make sure we're not overwriting a setting already in place
 if [ -n "$GTK_IM_MODULE" ]; then
-  if [ "$GTK_IM_MODULE" != "xim" ]; then
+  if [ "$GTK_IM_MODULE" != "$INPUT_METHOD" ]; then
     echo >&2 "ERROR: $ENVFILE sets GTK_IM_MODULE to $GTK_IM_MODULE. Please edit the file and fix this."
     exit 1
   fi
 else
-  echo "GTK_IM_MODULE=xim" >>/etc/environment
+  sudo /bin/sh -c "echo GTK_IM_MODULE=\"$INPUT_METHOD\" >>$ENVFILE"
 fi
 
 if [ -n "$QT_IM_MODULE" ]; then
-  if [ "$QT_IM_MODULE" != "xim" ]; then
+  if [ "$QT_IM_MODULE" != "$INPUT_METHOD" ]; then
     echo >&2 "ERROR: $ENVFILE sets QT_IM_MODULE to $QT_IM_MODULE. Please edit the file and fix this."
     exit 1
   fi
 else
-  echo "QT_IM_MODULE=xim" >>/etc/environment
+  sudo /bin/sh -c "echo QT_IM_MODULE=\"$INPUT_METHOD\" >>$ENVFILE"
 fi
 
 # Save a copy of the system Compose file into .XCompose, replacing
 # all ocurrences of accented-c by cedilla-c
-
 sed -e 's/\xc4\x87/\xc3\xa7/g' \
-    -e 's/\xc4\x86/\xc3\x87/g' <"$SYSTEM_COMPOSE" >"$USER_COMPOSE"
+    -e 's/\xc4\x86/\xc3\x87/g' <"$system_compose" >"$USER_COMPOSE"
 
 cat <<EOM
-Operation complete.
+System changed.
 
 Please reboot your system (or restart your X server) to activate the changes.
 
-To revert the system to the previous state, remove the file $USER_COMPOSE and
-edit $ENVFILE, removing all lines with GTK_IM_MODULE and QT_IM_MODULE.
+To revert the system to the previous state:
 
-If things don't work after a reboot, make sure your "Input Method" is configured
-to "auto" in the Gnome Settings.
+* Remove the file $USER_COMPOSE
+* Edit $ENVFILE, removing all lines with GTK_IM_MODULE and QT_IM_MODULE.
+
+If things don't work after a reboot, make sure your Input Method
+is configured to "Auto" in the Gnome Settings.
+
+Operation complete.
+
 EOM
