@@ -53,7 +53,7 @@ The program performs two steps:
     cedilla c (ç). This should satisfy non-Gnome programs.
 
   * It configures your environment (in `/etc/environment`) to use the "cedilla"
-    module for GTK and QT.
+    module for GTK.
 
 ## Compatibility
 

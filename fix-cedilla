@@ -61,15 +61,6 @@ else
   sudo /bin/sh -c "echo GTK_IM_MODULE=\"$INPUT_METHOD\" >>$ENVFILE"
 fi
 
-if [ -n "$QT_IM_MODULE" ]; then
-  if [ "$QT_IM_MODULE" != "$INPUT_METHOD" ]; then
-    echo >&2 "ERROR: $ENVFILE sets QT_IM_MODULE to $QT_IM_MODULE. Please edit the file and fix this."
-    exit 1
-  fi
-else
-  sudo /bin/sh -c "echo QT_IM_MODULE=\"$INPUT_METHOD\" >>$ENVFILE"
-fi
-
 # Save a copy of the system Compose file into .XCompose, replacing
 # all ocurrences of accented-c by cedilla-c
 sed -e 's/\xc4\x87/\xc3\xa7/g' \
@@ -82,7 +73,7 @@ Please reboot your system (or restart your X server) to activate the changes.
 To revert the system to the previous state:
 
 * Remove the file $USER_COMPOSE
-* Edit $ENVFILE, removing all lines with GTK_IM_MODULE and QT_IM_MODULE.
+* Edit $ENVFILE, removing all lines with GTK_IM_MODULE.
 
 If things don't work after a reboot, make sure your Input Method
 is configured to "Auto" in the Gnome Settings.
