@@ -12,7 +12,7 @@ Uma peculiaridade do teclado "US-International" no Windows é que a sequência `
 
 Com o passar dos anos, a maioria dos países definiu seu próprio layout de teclado (incluindo o Brasil, com o [infeliz] ABNT-II), e o projeto Gnome adicionou suporte completo a esses layouts. Em determinado ponto, os desenvolvedores responsáveis pelo Gnome decidiram que por questões de consistência, `<acento> + c` deveria gerar um c acentuado ao invés do cedilha. A lógica é que a maioria dos países já têm os seus teclados específicos e o "US-International" seria uma espécie de "fallback" para aqueles usando o padrão americano.
 
-Esta mudança gerou uma quantidade substancial de frustração, com
+Esta mudança gerou uma quantidade substancial de frustração, e
 [vários](https://bugs.launchpad.net/ubuntu/+source/ibus/+bug/518056)
 [bugs](http://askubuntu.com/questions/363115/how-to-type-latin-small-letter-c-with-cedilla)
 [foram](https://ask.fedoraproject.org/en/question/28468/problems-with-letter-c-in-us-international-keyboard-fedora-19/)

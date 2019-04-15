@@ -63,4 +63,4 @@ I've tested this with a few versions of Debian, Ubuntu, and Mint Linux with
 success. Please let me know about success and failure stories in other versions
 of Linux.
 
-Push requests with fixes and updates are always welcome.
+Pull Requests (PRs) with fixes and updates are always welcome.
