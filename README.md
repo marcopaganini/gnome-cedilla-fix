@@ -1,5 +1,7 @@
 # gnome-cedilla-fix
 
+[Versão em português](README_ptbr.md)
+
 Configure your Gnome "US-International" keyboard layout to generate a cedilla c
 (ç) instead of an accented c (ć). This project should be particularly useful to
 Brazilian Portuguese users with a US-International layout, but could also be
