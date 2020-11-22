@@ -17,23 +17,23 @@ USER_COMPOSE="$HOME/.XCompose"
 ENVFILE="/etc/environment"
 INPUT_METHOD="cedilla"
 
-PROGNAME=${0##*/}
+PROGNAME="${0##*/}"
 
 # Find compose file for the current language.
-system_compose=$COMPOSE_DIR/$(sed -ne "s/^\([^:]*\):[ \t]*$LANG/\1/p" <$COMPOSE_DIR/compose.dir | head -1)
-if [ -z "$system_compose" ]; then
-  echo >&2 "ERROR: Unable to find a system compose file for your system language ($LANG)"
+system_compose=${COMPOSE_DIR}/$(sed -ne "s/^\([^:]*\):[ \t]*$LANG/\1/p" <"${COMPOSE_DIR}/compose.dir" | head -1)
+if [ -z "${system_compose}" ]; then
+  echo >&2 "${PROGNAME} error: Unable to find a system compose file for your system language (${LANG})"
   exit 1
 fi
 
-if [ ! -s "$system_compose" ]; then
-  echo >&2 "ERROR: Unable to open system Compose file: $system_compose"
+if [ ! -s "${system_compose}" ]; then
+  echo >&2 "${PROGNAME} error: Unable to open system Compose file: ${system_compose}"
   exit 1
 fi
 
-if [ -s "$USER_COMPOSE" ]; then
+if [ -s "${USER_COMPOSE}" ]; then
   echo >&2 "*** WARNING: ***"
-  echo >&2 "A file named $USER_COMPOSE already exists."
+  echo >&2 "A file named ${USER_COMPOSE} already exists."
   echo >&2 "Saving original to ${USER_COMPOSE}.ORIGINAL"
   rm -f "${USER_COMPOSE}.ORIGINAL"
   cp -f "${USER_COMPOSE}" "${USER_COMPOSE}.ORIGINAL"
@@ -41,12 +41,13 @@ fi
 
 # Configure system for our input method.
 unset GTK_IM_MODULE
+# shellcheck disable=SC1090
 [ -s "$ENVFILE" ] && source "$ENVFILE"
 
 # sudo warning
 cat <<EOM
 
-This program uses "sudo" to make changes to $ENVFILE.
+This program uses "sudo" to make changes to ${ENVFILE}.
 You may be prompted to enter your password next.
 
 EOM
@@ -64,7 +65,7 @@ fi
 # Save a copy of the system Compose file into .XCompose, replacing
 # all ocurrences of accented-c by cedilla-c
 sed -e 's/\xc4\x87/\xc3\xa7/g' \
-    -e 's/\xc4\x86/\xc3\x87/g' <"$system_compose" >"$USER_COMPOSE"
+    -e 's/\xc4\x86/\xc3\x87/g' <"${system_compose}" >"${USER_COMPOSE}"
 
 cat <<EOM
 System changed.
@@ -72,7 +73,7 @@ System changed.
 Please reboot your system (or restart your X server) to activate the changes.
 To revert the system to the previous state:
 
-* Remove the file $USER_COMPOSE
+* Remove the file ${USER_COMPOSE}
 * Edit $ENVFILE, removing all lines with GTK_IM_MODULE.
 
 If things don't work after a reboot, make sure your Input Method
