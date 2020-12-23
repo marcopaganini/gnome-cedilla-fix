@@ -2,7 +2,7 @@
 #
 # fix-cedilla
 #
-# This is a very simple program to configure your personal ".XCompose" file and
+# This is a very simple script to configure your personal ".XCompose" file and
 # your environment so that typing 'c will generate a cedilla c instead of an
 # accented c.
 #
@@ -14,8 +14,8 @@
 LANG=${LANG:=en_US.UTF-8}
 COMPOSE_DIR="/usr/share/X11/locale"
 USER_COMPOSE="$HOME/.XCompose"
-ENVFILE="/etc/environment"
-INPUT_METHOD="cedilla"
+BOLD=$(tput bold)
+RESET=$(tput sgr0)
 
 PROGNAME="${0##*/}"
 
@@ -32,34 +32,12 @@ if [ ! -s "${system_compose}" ]; then
 fi
 
 if [ -s "${USER_COMPOSE}" ]; then
-  echo >&2 "*** WARNING: ***"
+  echo >&2 "${BOLD}*** WARNING: ***${RESET}"
   echo >&2 "A file named ${USER_COMPOSE} already exists."
   echo >&2 "Saving original to ${USER_COMPOSE}.ORIGINAL"
+  echo >&2
   rm -f "${USER_COMPOSE}.ORIGINAL"
   cp -f "${USER_COMPOSE}" "${USER_COMPOSE}.ORIGINAL"
-fi
-
-# Configure system for our input method.
-unset GTK_IM_MODULE
-# shellcheck disable=SC1090
-[ -s "$ENVFILE" ] && source "$ENVFILE"
-
-# sudo warning
-cat <<EOM
-
-This program uses "sudo" to make changes to ${ENVFILE}.
-You may be prompted to enter your password next.
-
-EOM
-
-# Make sure we're not overwriting a setting already in place
-if [ -n "$GTK_IM_MODULE" ]; then
-  if [ "$GTK_IM_MODULE" != "$INPUT_METHOD" ]; then
-    echo >&2 "ERROR: $ENVFILE sets GTK_IM_MODULE to $GTK_IM_MODULE. Please edit the file and fix this."
-    exit 1
-  fi
-else
-  sudo /bin/sh -c "echo GTK_IM_MODULE=\"$INPUT_METHOD\" >>$ENVFILE"
 fi
 
 # Save a copy of the system Compose file into .XCompose, replacing
@@ -68,16 +46,17 @@ sed -e 's/\xc4\x87/\xc3\xa7/g' \
     -e 's/\xc4\x86/\xc3\x87/g' <"${system_compose}" >"${USER_COMPOSE}"
 
 cat <<EOM
-System changed.
+${BOLD}System configuration changed.${RESET}
 
-Please reboot your system (or restart your X server) to activate the changes.
-To revert the system to the previous state:
+Please log out of your X session and re-login to effect changes.
+You may need to restart your X server if a simple logout/login does not work.
 
-* Remove the file ${USER_COMPOSE}
-* Edit $ENVFILE, removing all lines with GTK_IM_MODULE.
+To revert the system to the previous state, type the following command:
 
-If things don't work after a reboot, make sure your Input Method
-is configured to "Auto" in the Gnome Settings.
+  rm "${USER_COMPOSE}"
+
+If things don't work after a reboot, make sure your Input Method is configured
+to "Auto" in the Gnome Settings.
 
 Operation complete.
 EOM

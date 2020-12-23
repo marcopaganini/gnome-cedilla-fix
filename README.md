@@ -34,33 +34,35 @@ adoption more difficult for those who need to use cedilla-c regularly.
 At the shell prompt, type:
 
 ```bash
-$ wget -q https://raw.githubusercontent.com/marcopaganini/gnome-cedilla-fix/master/fix-cedilla -O fix-cedilla
-$ chmod 755 fix-cedilla
-$ ./fix-cedilla
+wget -q https://raw.githubusercontent.com/marcopaganini/gnome-cedilla-fix/master/fix-cedilla -O fix-cedilla
+chmod 755 fix-cedilla
+./fix-cedilla
 ```
 
-If everything works OK, the program will issue a message indicating the
-operation was completed and some tips on how to revert the installation, if
-needed.
+To activate the changes, log out and re-login. This is usually enough. If you
+still see the wrong results after the logout/login procedure, reboot your
+computer.
 
-Make sure to reboot your computer (technically, only a X restart is required) to
-activate the changes.
+## Uninstallation
+
+To uninstall, just run:
+
+```
+rm ${HOME}/.XCompose
+```
+
+Again, you will need to log out and re-login for changes to take effect.
 
 ## How does it work?
 
-The program performs two steps:
-
-  * It copies your system "Compose" file into `~/.XCompose` (your personal
-    compose file), translating every occurrence of an accented-c (ć) into a
-    cedilla c (ç). This should satisfy non-Gnome programs.
-
-  * It configures your environment (in `/etc/environment`) to use the "cedilla"
-    module for GTK.
+The script copies your system "Compose" file into `~/.XCompose` (your personal
+compose file), translating every occurrence of an accented-c (ć) into a cedilla
+c (ç). This should satisfy non-Gnome programs.
 
 ## Compatibility
 
-I've tested this with a few versions of Debian, Ubuntu, and Mint Linux with
-success. Please let me know about success and failure stories in other versions
-of Linux.
+I've tested this with a few versions of Debian, Ubuntu, Mint Linux, and Fedora
+with success. Please let me know about success and failure stories in other
+versions of Linux.
 
 Pull Requests (PRs) with fixes and updates are always welcome.
