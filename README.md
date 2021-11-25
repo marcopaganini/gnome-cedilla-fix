@@ -66,3 +66,15 @@ with success. Please let me know about success and failure stories in other
 versions of Linux.
 
 Pull Requests (PRs) with fixes and updates are always welcome.
+
+# You may also like
+
+You may also like these other (unrelated) repos from the same author:
+
+* [coolsites](https://github.com/marcopaganini/coolsites): A collection of cool, useful, and interesting sites around the Internet. There's something for everyone here.
+* [termschool-vim-theme](https://github.com/marcopaganini/termschool-vim-theme): A pleasant green/gray dark theme for vim and gvim (requires 256 color terminals or gvim).
+* [mojave-vim-theme](https://github.com/marcopaganini/mojave-vim-theme): A warm dark theme for Vim and Gvim.
+* [netbackup](https://github.com/marcopaganini/netbackup): A backup frontend for many common backup tools (rsync, rdiff-backup, etc). Simplify your backups using similar configuration files, generate log files on common locations, etc.
+* [mkvtool](https://github.com/marcopaganini/mkvtool): A "swiss-army knife" tool to manipulate, clean, rename MKV movie files and subtitles.
+* [bitrot](https://github.com/marcopaganini/bitrot): A simple tool to detect bitrot (silent media corruption) in your media. Particularly useful for flash drives.
+* [quotes exporter](https://github.com/marcopaganini/quotes-exporter): A prometheus financial quotes exporter.
