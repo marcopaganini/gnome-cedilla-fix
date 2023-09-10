@@ -24,8 +24,7 @@ e versões iniciais do Gnome.
 Com o passar dos anos, a maioria dos países definiu seu próprio layout de
 teclado (incluindo o Brasil, com o [infeliz] ABNT-II), e o projeto Gnome
 adicionou suporte completo a esses layouts. Em determinado momento, os
-desenvolvedores do Gnome decidiram que por questões de consistência, `<acento>
-+ c` deveria gerar um c acentuado ao invés do cedilha.  A lógica é que a
+desenvolvedores do Gnome decidiram que por questões de consistência, `[acento] + c` deveria gerar um c acentuado ao invés do cedilha.  A lógica é que a
 maioria dos países já têm os seus teclados específicos e o "US-International"
 seria uma espécie de "segunda opção" para aqueles usando o padrão americano.
 
